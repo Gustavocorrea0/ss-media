@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         color:colors.white,
         fontSize: 32,
         fontWeight: "bold",
-        marginStart: "32%",
+        marginStart: "35%",
         marginTop: "0%"
     },
 

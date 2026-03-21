@@ -18,9 +18,7 @@ export default function Home() {
 
                 <TouchableOpacity 
                     style={[styles.btnUser, { marginStart: "65%", marginTop: "-9%"}]}
-                    onPress={() => {
-                        router.replace("/(post)/post")
-                    }}
+                    onPress={() => { router.replace("/(post)/post") }}
                 >
                     <Image 
                         style={{ width: 35, height: 35 }}
@@ -28,9 +26,14 @@ export default function Home() {
                     />
                 </TouchableOpacity>
 
-                <Text style={{ color: colors.white, fontSize: 45, fontWeight: "condensed", marginStart: "78%", marginTop: "-20%" }}>|</Text>
+                <Text style={styles.textSeparator}>|</Text>
 
-                <TouchableOpacity style={[styles.btnUser, { marginStart: "85%", marginTop: "-11%"}]}>
+                <TouchableOpacity 
+                    style={[styles.btnUser, { marginStart: "85%", marginTop: "-11%"}]}
+                    onPress={() => {
+                        router.replace("/(profile)/profile")
+                    }}
+                >
                     <Image
                         style={{ width: 40, height: 40 }}
                         source={require("../../assets/icons/account.png")}
@@ -39,23 +42,26 @@ export default function Home() {
             
             </View>
 
-            <View style={ styles.separatorLine }></View>
+            <View style={ styles.separatorLine }/>
 
             <View style={{ justifyContent: "center", alignItems:"center", height: "100%" }}>
+                
                 <ScrollView 
                     style={{ width: "90%", height: "100%", marginTop: "10%" }}  
                     showsVerticalScrollIndicator={false}
                 >
+                    
                     <View style={[ styles.card, { height: 200 }]}>
+
                         <View style={{ justifyContent: "center", alignItems: "center" }}>
                             <Image
                                 style={{ width: 40, height: 40, marginTop: "5%", marginStart: "-85%" }}
                                 source={require("../../assets/icons/account.png")}
                             />
-                            <Text style={{ fontSize: 20, color: colors.white, fontWeight: "bold", marginTop: "-10%", marginStart: "-45%" }}>{"gustavo"}</Text>
+                            <Text style={{ color: colors.white, fontSize: 20, fontWeight: "bold", marginTop: "-10%", marginStart: "-45%" }}>{"gustavo"}</Text>
                         </View>
                         
-                        <View style={{ justifyContent: "center", alignItems: "center", marginTop: "10%", marginStart: "2%", width: "100%" }}>
+                        <View style={ styles.cardPostText }>
                             <Text style={{ color: colors.white }}>
                                 {"Salve o corinthians o campeao dos campeoes, eternamente dentro dos nossos coracoes"}
                             </Text>
@@ -83,7 +89,9 @@ export default function Home() {
                         </View>
 
                     </View>
+
                 </ScrollView>
+                
             </View>
 
         </View>

@@ -25,6 +25,14 @@ const styles = StyleSheet.create({
         backgroundColor: colors.backgroundColor,
     },
 
+    textSeparator:{ 
+        color: colors.white,
+        fontSize: 45,
+        fontWeight: "condensed",
+        marginStart: "78%",
+        marginTop: "-20%" 
+    },
+
     separatorLine: {
         height: 1,
         width: "90%",
@@ -40,6 +48,14 @@ const styles = StyleSheet.create({
         borderStartWidth: 0,
         borderEndWidth: 0,
         borderColor: colors.white,
+    },
+
+    cardPostText:{ 
+        justifyContent: "center", 
+        alignItems: "center", 
+        marginTop: "10%", 
+        marginStart: "2%", 
+        width: "100%" 
     }
 
 });

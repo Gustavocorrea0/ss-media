@@ -9,11 +9,14 @@ export default function Post() {
     const [ textPost, setTextPost ] = useState("");
 
     async function backToHome() { router.replace("/(home)/home") }
+    async function sendPost() {
+        console.log("postou!!!")
+        router.replace('/(home)/home')
+    }
 
     return (
         <View style={styles.container}>
 
-            {/* header */}
             <View style={{ marginTop: "0%" }}>
                 <View style={{ marginTop: "18%" }}>
                     <Text style={styles.titlePage}>Postagem</Text>
@@ -53,7 +56,7 @@ export default function Post() {
                 </Text>
             </View>
             
-            <TouchableOpacity style={styles.btnPost} onPress={() => {backToHome}}>
+            <TouchableOpacity style={styles.btnPost} onPress={() => { sendPost() }}>
                 <Text style={{ fontWeight: "bold", fontSize: 25 }}>Postar</Text>
             </TouchableOpacity>
 
