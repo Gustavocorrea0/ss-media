@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
 
     separatorLine: {
         height: 1,
-        width: "90%",
-        marginStart: "5%",
+        width: "93%",
+        marginStart: "3.5%",
         marginTop: "-55%",
         backgroundColor: colors.white
     },
@@ -48,14 +48,58 @@ const styles = StyleSheet.create({
         borderStartWidth: 0,
         borderEndWidth: 0,
         borderColor: colors.white,
+        padding: 15
     },
 
     cardPostText:{ 
-        justifyContent: "center", 
-        alignItems: "center", 
-        marginTop: "10%", 
-        marginStart: "2%", 
+        justifyContent: "flex-start", 
+        alignItems: "stretch", 
+        marginTop: "5%", 
+        marginStart: "0%", 
         width: "100%" 
+    },
+
+    containerPost: { 
+        justifyContent: "center", 
+        alignItems:"center", 
+        height: "100%" 
+    },
+
+    headerViewCard: {
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
+    profileImage: { 
+        width: 40,
+        height: 40, 
+        marginTop: "0%", 
+        marginStart: "-95%" 
+    },
+
+    profileName: { 
+        color: colors.white,
+        fontSize: 20,
+        fontWeight: "bold",
+        marginTop: "-10%",
+        marginStart: "-60%" 
+    },
+
+    btnLike:{ 
+        height: 35, 
+        width: 35, 
+        borderRadius: 35,  
+        marginStart: "-95%", 
+        marginTop: "10%", 
+        justifyContent: "center", 
+        alignItems: "center" 
+    },
+
+    textDateTimePost: {
+        color: colors.white,
+        fontWeight: "bold",
+        marginTop: "-8%",
+        marginStart: "60%" 
     }
 
 });

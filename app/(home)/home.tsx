@@ -1,13 +1,82 @@
 import colors from '@/constants/colors';
-import { Feather } from '@react-native-vector-icons/feather';
+import { supabase } from '@/lib/supabase';
+import Feather from '@react-native-vector-icons/feather';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { Alert, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
+
+function formatDateTime(isoString: any) {
+  const data = new Date(isoString);
+
+  const dia = String(data.getDate()).padStart(2, '0');
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const ano = data.getFullYear();
+
+  const horas = String(data.getHours()).padStart(2, '0');
+  const minutos = String(data.getMinutes()).padStart(2, '0');
+
+  return `${dia}/${mes}/${ano} - ${horas}:${minutos}`;
+}
 
 export default function Home() {
     
     const [ isLike, setIsLike ] = useState(false);
+    const [ postFound, setPostFound ] = useState(false);
+    const [ reloadPage, setReloadPage ] = useState(false)
+    
+    type Post = {
+        id_post: string;
+        id_user_post: { 
+            name: string 
+        };
+        text_post: string;
+        datetime_create: string;
+        datetime_update: string;
+    };
+
+    const [posts, setPosts] = useState<Post[]>([]);
+
+    async function featchPosts() {
+        try {
+
+            const { data, error } = await supabase.from('posts')
+                                                  .select(`
+                                                    id_post,
+                                                    id_user_post(name),
+                                                    text_post,
+                                                    datetime_create,
+                                                    datetime_update
+                                                  `)
+                                                  .order('datetime_create', { ascending: false });
+
+            if ( error ) {
+                Alert.alert("Falha", "Posts não Encontrados, Tente Novamente!");
+                return;
+            } else if (data.length == 0) {
+                return;
+            } else {
+
+                const formatted = data.map(post => ({
+                    ...post,
+                    id_user_post: Array.isArray(post.id_user_post)
+                    ? post.id_user_post[0]
+                    : post.id_user_post
+                }));
+
+                setPosts(formatted);
+                setPostFound(true);
+            }
+
+        } catch (error) {
+            Alert.alert("Falha", "Tivemos Um Problema, Tente Novamente!");
+            return;
+        }
+    }
+
+    useEffect(() => {
+        featchPosts();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -44,53 +113,66 @@ export default function Home() {
 
             <View style={ styles.separatorLine }/>
 
-            <View style={{ justifyContent: "center", alignItems:"center", height: "100%" }}>
+            <View style={ styles.containerPost }>
                 
-                <ScrollView 
-                    style={{ width: "90%", height: "100%", marginTop: "10%" }}  
-                    showsVerticalScrollIndicator={false}
-                >
-                    
-                    <View style={[ styles.card, { height: 200 }]}>
+                { postFound ? 
+                    (
+                        <FlatList 
+                            refreshing={reloadPage}
+                            onRefresh={featchPosts}
+                            showsVerticalScrollIndicator={false}
+                            ListFooterComponent={<View style={{ height: 300 }} />}
+                            data={posts}
+                            keyExtractor={(item) => item.id_post.toString()}
+                            renderItem={({ item }) => (
 
-                        <View style={{ justifyContent: "center", alignItems: "center" }}>
-                            <Image
-                                style={{ width: 40, height: 40, marginTop: "5%", marginStart: "-85%" }}
-                                source={require("../../assets/icons/account.png")}
-                            />
-                            <Text style={{ color: colors.white, fontSize: 20, fontWeight: "bold", marginTop: "-10%", marginStart: "-45%" }}>{"gustavo"}</Text>
-                        </View>
-                        
-                        <View style={ styles.cardPostText }>
-                            <Text style={{ color: colors.white }}>
-                                {"Salve o corinthians o campeao dos campeoes, eternamente dentro dos nossos coracoes"}
-                            </Text>
-                        </View>
+                                <View style={[ styles.card, { width: "100%" }]}>
+                                    
+                                    <View style={ styles.headerViewCard }>
+                                        <Image
+                                            style={ styles.profileImage }
+                                            source={require("../../assets/icons/account.png")}
+                                        />
+                                        <Text style={ styles.profileName }>{ item.id_user_post?.name }</Text>
+                                    </View>
+                                    
+                                    <View style={ styles.cardPostText }>
+                                        <Text style={{ color: colors.white, textAlign: "justify" }}>
+                                            {item.text_post}
+                                        </Text>
+                                    </View>
 
-                        <View style={{ justifyContent: "center", alignItems: "center" }}>
-                            <TouchableOpacity 
-                                style={{ height: 35, width: 35, borderRadius: 35,  marginStart: "-85%", marginTop: "10%", justifyContent: "center", alignItems: "center" }}
-                                onPress={() => {
-                                    if (isLike) { setIsLike(false);
-                                    } else { setIsLike(true); }
-                                }}
-                            >
-                               <Feather
-                                    name="heart"
-                                    color={isLike ? "#fc0000" : "#ffffff"}
-                                    size={20}
-                                />
-                            </TouchableOpacity>
-                            <Text
-                                style={{ color: colors.white, fontWeight: "bold", marginTop: "-8%", marginStart: "60%" }}
-                            >
-                                {"07/03/2026 - 22:27"}
-                            </Text>
-                        </View>
+                                    <View style={ styles.headerViewCard }>
+                                        
+                                        <TouchableOpacity 
+                                            style={ styles.btnLike }
+                                            onPress={() => {
+                                                if (isLike) { setIsLike(false);
+                                                } else { setIsLike(true); }
+                                            }}
+                                        >
+                                            <Feather
+                                                name="heart"
+                                                color={isLike ? colors.red : colors.white }
+                                                size={20}
+                                            />
+                                        </TouchableOpacity>
 
-                    </View>
+                                        <Text style={ styles.textDateTimePost } >
+                                            { formatDateTime( item.datetime_update ) }
+                                        </Text>
 
-                </ScrollView>
+                                    </View>
+
+                                </View>
+                            )}
+                        />
+                    ) : (
+                        <Text style={{ fontSize: 35, color: colors.white, fontWeight: "black", marginTop: "-40%", textAlign: "center"  }}>
+                            Aguarde Enquanto Buscamos Novas Postagens!
+                        </Text>
+                    )
+                }
                 
             </View>
 

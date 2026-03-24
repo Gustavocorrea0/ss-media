@@ -1,9 +1,52 @@
+import { supabase } from "@/lib/supabase";
 import { router } from "expo-router";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "./style";
 
+
 export default function SignIn() {
+
+    const [ email, setEmail ] = useState("");
+    const [ password, setPassword ] = useState("");
+    const [ loading, setLoading ] = useState(false);
+
+    async function signInApp() {
+        try {
+            setLoading(true);
+
+            if ( !email || !password) {
+                Alert.alert("Atenção", "Dados Inválidos");
+                return;
+            }
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            })
+
+            if (error ) {
+                Alert.alert("Falha", "Não Possível Realizar o Acesso, Tente Novamente!");
+                console.log(error)
+                return;
+            } else {
+                setEmail("");
+                setPassword("");
+                router.replace("/(home)/home")
+            }
+
+        } catch (error) {
+            Alert.alert("Falha", "Não Possível Realizar o Acesso, Tente Novamente!");
+            return;
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function signUp() { router.replace("/(auth)/signup/signup") }
+
     return (
+
         <View style={styles.container}>
 
             <View style={[ styles.header, { borderBottomLeftRadius: 150 } ]}>
@@ -21,6 +64,8 @@ export default function SignIn() {
                     editable={true}
                     multiline={false}
                     maxLength={100}
+                    onChangeText={setEmail}
+                    value={email}
                     style={styles.textInputField}
                 />
                 
@@ -30,19 +75,24 @@ export default function SignIn() {
                     multiline={false}
                     maxLength={200}
                     secureTextEntry
+                    onChangeText={setPassword}
+                    value={password}
                     style={styles.textInputField}
                 />
                 
                 <TouchableOpacity 
                     style={styles.btnLogin}
-                    onPress={() => router.replace("/(home)/home")}
+                    onPress={() => { signInApp() }}
                 >
-                    <Text style={{ fontWeight: "bold", fontSize: 22 }}>Entrar</Text>
+                    <Text style={{ fontWeight: "bold", fontSize: 22 }}>{loading ? "Carregando..." : "Entrar"}</Text>
                 </TouchableOpacity>
 
                 <View style={[ styles.separatorLine, { marginTop: "10%" } ]}/>
 
-                <TouchableOpacity style={styles.btnSignup}>
+                <TouchableOpacity 
+                    style={styles.btnSignup} 
+                    onPress={() => { signUp() }}
+                >
                     <Text style={styles.textBtnSignup}>Criar Conta</Text>
                 </TouchableOpacity>
 
@@ -52,4 +102,5 @@ export default function SignIn() {
 
         </View>
     );
+    
 }
