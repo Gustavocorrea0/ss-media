@@ -13,6 +13,7 @@ export default function SignIn() {
 
     async function signInApp() {
         try {
+
             setLoading(true);
 
             if ( !email || !password) {
@@ -25,9 +26,8 @@ export default function SignIn() {
                 password: password
             })
 
-            if (error ) {
-                Alert.alert("Falha", "Não Possível Realizar o Acesso, Tente Novamente!");
-                console.log(error)
+            if (error) {
+                Alert.alert("Atenção", "Dados Inválidos!");
                 return;
             } else {
                 setEmail("");
@@ -46,7 +46,6 @@ export default function SignIn() {
     async function signUp() { router.replace("/(auth)/signup/signup") }
 
     return (
-
         <View style={styles.container}>
 
             <View style={[ styles.header, { borderBottomLeftRadius: 150 } ]}>

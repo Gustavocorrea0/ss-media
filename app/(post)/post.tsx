@@ -56,50 +56,53 @@ export default function Post() {
 
     return (
         <View style={styles.container}>
-
-            <View style={{ marginTop: "0%" }}>
-                <View style={{ marginTop: "18%" }}>
-                    <Text style={styles.titlePage}>Postagem</Text>
-                    <TouchableOpacity 
-                        style={styles.btnBack}
-                        onPress={() => backToHome()}
-                    >
-                        <Image
-                            style={{ height: 35, width: 35}}
-                            source={require("../../assets/icons/arrow-circle-left.png")}
-                        />
-                    </TouchableOpacity>
-                </View>
+    
+            <View style={styles.header}>
+                <TouchableOpacity
+                    style={styles.btnBack}
+                    onPress={() => backToHome()}
+                >
+                    <Image
+                        style={{ height: 22, width: 22 }}
+                        source={require("../../assets/icons/arrow-circle-left.png")}
+                    />
+                </TouchableOpacity>
+    
+                <Text style={styles.titlePage}>Postagem</Text>
+    
+                <View style={styles.headerSpacer} />
             </View>
-            <View style={styles.separatorLine}/>
-
-            <View style={{ marginTop: "5%", alignItems: 'center', alignSelf: "flex-start", marginLeft: "8%", width: "85%" }}>
-                <Text style={{ color: colors.white, fontWeight: "bold", fontSize: 16, marginStart: "-55%" }}>
-                    {"Escreva Sua Publicação:"}
+    
+            <View style={styles.separatorLine} />
+    
+            <Text style={styles.labelText}>Escreva Sua Publicação:</Text>
+    
+            <TextInput
+                editable
+                multiline={true}
+                numberOfLines={4}
+                maxLength={244}
+                placeholder="Em que você está pensando..."
+                placeholderTextColor={colors.black}
+                autoCorrect={true}
+                value={textPost}
+                onChangeText={setTextPost}
+                style={styles.textFieldInput}
+            />
+    
+            <Text style={styles.charCount}>
+                {textPost.length}/244
+            </Text>
+    
+            <TouchableOpacity
+                style={styles.btnPost}
+                onPress={() => { sendPost() }}
+            >
+                <Text style={styles.btnPostText}>
+                    {loading ? "Postando..." : "Postar"}
                 </Text>
-                <TextInput
-                    editable
-                    multiline={true}
-                    numberOfLines={4}
-                    maxLength={244}
-                    placeholder="Em que você está pensando..."
-                    autoCorrect={true}
-                    value={textPost}
-                    onChangeText={setTextPost}
-                    style={ styles.textFieldInput }
-                />
-            </View>
-            
-            <View style={{ alignItems: "center", justifyContent: "center", marginTop: "10%" }}>
-                <Text style={{ color: colors.white, fontSize: 16 }}>
-                    {textPost.length}/244 Caracteres
-                </Text>
-            </View>
-            
-            <TouchableOpacity style={styles.btnPost} onPress={() => { sendPost() }}>
-                <Text style={{ fontWeight: "bold", fontSize: 25 }}>{ loading ? "Postando..." : "Postar" }</Text>
             </TouchableOpacity>
-
+    
         </View>
     );
 }

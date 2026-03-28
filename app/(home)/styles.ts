@@ -1,5 +1,7 @@
 import colors from "@/constants/colors";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
     container: {
@@ -8,100 +10,157 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        marginTop: "10%"
-    },
-
-    titlePage: {
-        color:colors.white,
-        fontSize: 32,
-        fontWeight: "bold",
-        marginStart: "5%",
-        marginTop: "10%"
-    },
-
-    btnUser: {
-        height: "20%",
-        width: "12%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 20,
+        paddingTop: 54,
+        paddingBottom: 14,
         backgroundColor: colors.backgroundColor,
     },
 
-    textSeparator:{ 
+    titlePage: {
         color: colors.white,
-        fontSize: 45,
-        fontWeight: "condensed",
-        marginStart: "78%",
-        marginTop: "-20%" 
+        fontSize: 26,
+        fontWeight: "800",
+        letterSpacing: 0.5,
+        flex: 1,
+    },
+
+    headerActions: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+    },
+
+    btnUser: {
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        backgroundColor: colors.gray2,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    textSeparator: {
+        color: colors.gray3,
+        fontSize: 20,
+        marginHorizontal: 4,
     },
 
     separatorLine: {
         height: 1,
-        width: "93%",
-        marginStart: "3.5%",
-        marginTop: "-55%",
-        backgroundColor: colors.white
+        backgroundColor: colors.gray4,
+        marginHorizontal: 20,
+        marginBottom: 8,
+    },
+
+    containerPost: {
+        flex: 1,
+    },
+
+    listContent: {
+        paddingHorizontal: 16,
+        paddingTop: 8,
+        paddingBottom: 120,
+    },
+
+    emptyContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: 32,
+        marginTop: 80,
+    },
+
+    emptyText: {
+        fontSize: 18,
+        color: colors.gray5,
+        fontWeight: "600",
+        textAlign: "center",
+        lineHeight: 28,
     },
 
     card: {
-        width: "100%",
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: colors.gray6,
+        borderRadius: 16,
         borderWidth: 1,
-        borderStartWidth: 0,
-        borderEndWidth: 0,
-        borderColor: colors.white,
-        padding: 15
+        borderColor: colors.gray4,
+        padding: 16,
+        marginBottom: 12,
+        width: width - 32,
     },
 
-    cardPostText:{ 
-        justifyContent: "flex-start", 
-        alignItems: "stretch", 
-        marginTop: "5%", 
-        marginStart: "0%", 
-        width: "100%" 
+    headerTopPost: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 12,
+        gap: 10,
     },
 
-    containerPost: { 
-        justifyContent: "center", 
-        alignItems:"center", 
-        height: "100%" 
-    },
-
-    headerViewCard: {
+    profileImageWrapper: {
+        width: 42,
+        height: 42,
+        borderRadius: 21,
+        backgroundColor: colors.gray7,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        overflow: "hidden",
     },
 
-    profileImage: { 
-        width: 40,
-        height: 40, 
-        marginTop: "0%", 
-        marginStart: "-95%" 
+    profileImage: {
+        width: 28,
+        height: 28,
     },
 
-    profileName: { 
+    textProfileName: {
         color: colors.white,
-        fontSize: 20,
-        fontWeight: "bold",
-        marginTop: "-10%",
-        marginStart: "-60%" 
+        fontSize: 15,
+        fontWeight: "700",
+        flex: 1,
     },
 
-    btnLike:{ 
-        height: 35, 
-        width: 35, 
-        borderRadius: 35,  
-        marginStart: "-95%", 
-        marginTop: "10%", 
-        justifyContent: "center", 
-        alignItems: "center" 
+    cardPostText: {
+        marginBottom: 14,
+    },
+
+    postText: {
+        color: colors.gray8,
+        fontSize: 14,
+        lineHeight: 22,
+        textAlign: "left",
+    },
+
+    headerEndPost: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderTopWidth: 1,
+        borderTopColor: colors.gray2,
+        paddingTop: 12,
+    },
+
+    btnLike: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+        paddingVertical: 4,
+        paddingHorizontal: 10,
+        borderRadius: 20,
+        backgroundColor: colors.gray9,
+    },
+
+    likeCount: {
+        color: colors.gray10,
+        fontSize: 13,
+        fontWeight: "600",
     },
 
     textDateTimePost: {
-        color: colors.white,
-        fontWeight: "bold",
-        marginTop: "-8%",
-        marginStart: "60%" 
-    }
-
+        color: colors.gray11,
+        fontSize: 12,
+        fontWeight: "500",
+    },
 });
 
 export default styles;
