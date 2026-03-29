@@ -1,49 +1,33 @@
-import { supabase } from "@/lib/supabase";
-import { router } from "expo-router";
-import { useState } from "react";
+import { viewModelSignIn } from "@/src/viewModels/viewModelAuth";
+import { useEffect, useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "./style";
 
 
 export default function SignIn() {
 
-    const [ email, setEmail ] = useState("");
-    const [ password, setPassword ] = useState("");
-    const [ loading, setLoading ] = useState(false);
+    const { signIn, loading, error } = viewModelSignIn();
+    const [ email, setEmail ] = useState<string>("");
+    const [ password, setPassword ] = useState<string>("");
 
-    async function signInApp() {
-        try {
+    const signInApp = () => { 
 
-            setLoading(true);
-
-            if ( !email || !password) {
-                Alert.alert("Atenção", "Dados Inválidos");
-                return;
-            }
-
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password
-            })
-
-            if (error) {
-                Alert.alert("Atenção", "Dados Inválidos!");
-                return;
-            } else {
-                setEmail("");
-                setPassword("");
-                router.replace("/(home)/home")
-            }
-
-        } catch (error) {
-            Alert.alert("Falha", "Não Possível Realizar o Acesso, Tente Novamente!");
+        if ( !email || !password) {
+            Alert.alert("Atenção", "Dados Inválidos");
             return;
-        } finally {
-            setLoading(false);
         }
+
+        signIn(email, password);
+    
     }
 
-    async function signUp() { router.replace("/(auth)/signup/signup") }
+    //async function signUp() { router.replace("/(auth)/signup/signup") }
+
+    useEffect(() => {
+        if (error) {
+            Alert.alert("Atenção", "Dados Inválidos");
+        }
+    }, [error]);
 
     return (
         <View style={styles.container}>
@@ -81,7 +65,7 @@ export default function SignIn() {
                 
                 <TouchableOpacity 
                     style={styles.btnLogin}
-                    onPress={() => { signInApp() }}
+                    onPress={signInApp}
                 >
                     <Text style={{ fontWeight: "bold", fontSize: 22 }}>{loading ? "Carregando..." : "Entrar"}</Text>
                 </TouchableOpacity>
@@ -90,7 +74,7 @@ export default function SignIn() {
 
                 <TouchableOpacity 
                     style={styles.btnSignup} 
-                    onPress={() => { signUp() }}
+                    //onPress={() => { signUp() }}
                 >
                     <Text style={styles.textBtnSignup}>Criar Conta</Text>
                 </TouchableOpacity>

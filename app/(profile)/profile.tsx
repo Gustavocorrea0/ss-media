@@ -1,7 +1,7 @@
 import colors from "@/constants/colors";
-import { supabase } from "@/lib/supabase";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { viewModelCountPosts, viewModelFetchConstUserName, viewModelFetchPostCurrentUser, viewModelLikePost, viewModelRemoveLikePost, viewModelValidLikePost } from "@/src/viewModels/viewModelPost";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { Alert, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { Heart } from 'react-native-feather';
 import styles from "./styles";
@@ -22,180 +22,57 @@ function formatDateTime(isoString: any) {
 }
 
 export default function Profile() {
-    type Post = {
-        id_post: string;
-        id_user_post: { 
-            name: string 
-        };
-        text_post: string;
-        datetime_create: string;
-        datetime_update: string;
-        liked_by_user: boolean; // opcional
-    };
 
-    const [ posts, setPosts ] = useState<Post[]>([]);
-    const [ userName, setUserName ] = useState("");
     const [ postsQuantity, setPostsQuantity ] = useState(0)
-    const [ idCurrentUser, setIdCurrentUser ] = useState("");
-    const [ postFound, setPostFound ] = useState(false);
     const [ reloadPage ] = useState(false)
-    
-    async function getCurrentUser() {
-        try {
 
-            const { data: dataAuthUser, error: errorAuthUser } = await supabase.auth.getUser();
-            
-            if (errorAuthUser) {
-                Alert.alert("Falha", "Sessão Expirada!")
-                router.replace("/(auth)/signin/signin")
-                return null;
-            }
+    const { countAllPost } = viewModelCountPosts();
+    const { likePost } = viewModelLikePost();
+    const { removeLikePost } = viewModelRemoveLikePost();
+    const { validLike, errorValidLike} = viewModelValidLikePost();
+    const { fetchPostsCurrentUser, posts } = viewModelFetchPostCurrentUser();
+    const { fetchNameUser,  userNameCurrent } = viewModelFetchConstUserName()
 
-            var idAuthUser = dataAuthUser.user?.id;
-
-            const { data: dataUsers, error: errorUsers } = await supabase.from('users')
-                                                                         .select('name')
-                                                                         .eq('id_user', idAuthUser)
-                                                                         .single();
-            
-            if (errorUsers) {
-                Alert.alert("Falha", "Sessão Expirada")
-                router.replace("/(auth)/signin/signin")
-                return null;
-            } else if (dataUsers.name == "") {
-                Alert.alert("Falha", "Sessão Expirada")
-                router.replace("/(auth)/signin/signin")
-                return null;
-            }
-
-            setIdCurrentUser(idAuthUser);
-            setUserName(dataUsers.name)
-            featchPosts(idAuthUser);
-
-        } catch (error) {
-            Alert.alert("Falha", "Não foi Possível Buscar Posts");
-            router.replace("/(home)/home");
-            return;
+    async function getCountPostFromCurrentuserePost() {
+        const posts = await countAllPost();
+        if (posts) {
+            setPostsQuantity(posts);
+        } else {
+            setPostsQuantity(0);
         }
     }
 
-    async function getCountPostFromCurrentuser(idCurrentUserAuth: string) {
-        const { count, error } = await supabase.from('posts')
-                                               .select('*', { count: 'exact', head: true })
-                                               .eq('id_user_post', idCurrentUserAuth);
-
-        if (error) {
-            Alert.alert("Atenção", "Seus Post Não Foram Encontrados, Tente Novamente!");
-            router.replace('/(home)/home')
-            return;
-        } 
-
-        setPostsQuantity(count || 0);
-    
-    }
-
-    async function addLikeToPost( idPost: string, idUserLike: string ) {
+    async function addLikeOrRemoveLike(idPost: string) {
         try {
+            const likeIsTrue = await validLike(idPost);
 
-            const { error } = await supabase.from('likes').insert({
-                id_post: idPost,
-                id_user_like: idUserLike
-            });
-
-            if (error) {
-                Alert.alert("Atenção", "Não foi Possível Curtir esse Post, Tente Novamente!");
-                return;
-            }
-
-        } catch (error) {
-            Alert.alert("Falha", "Não foi Possível Curtir esse Post, Tente Novamente!");
-            return;
-        } finally {
-
-        }
-    }    
-
-    async function removeLikeToPost( idPost: string, idUserLike: string ) {
-        try {
-            const { error } = await supabase.from('likes')
-                                                  .delete()
-                                                  .eq('id_post', idPost)
-                                                  .eq('id_user_like', idUserLike);
-            
-            if (error) {
-                Alert.alert("Atenção", "Não foi Possível Descurtir esse Post, Tente Novamente!");
-                return;
-            }
-
-        } catch (error) {
-            Alert.alert("Falha", "Não foi Possível Descurtir esse Post, Tente Novamente!");
-            return;
-        } finally {
-
-        }
-    }
-
-    async function addLikeOrRemoveLike(idPost: string, idUserLike: string) {
-        const { error } = await supabase.from('likes')
-                                              .select('id_post, id_user_like')
-                                              .eq('id_post', idPost)
-                                              .eq('id_user_like', idUserLike)
-                                              .single();
-
-        if (error) { addLikeToPost(idPost, idUserLike);
-        } else { removeLikeToPost(idPost, idUserLike); }
-    }
-
-    async function featchPosts(idCurrentUserAuth: string) {
-        try {
-
-            const [{ data: postsData, error: postsError }, { data: userLikes, error: likesError }] = await Promise.all([
-                supabase.from('posts')
-                        .select(`
-                            id_post,
-                            id_user_post(name),
-                            text_post,
-                            datetime_create,
-                            datetime_update
-                        `)
-                        .eq("id_user_post", idCurrentUserAuth)
-                        .order('datetime_create', { ascending: false }),
-
-                supabase.from('likes')
-                        .select('id_post')
-                        .eq('id_user_like', idCurrentUserAuth),
-            ]);
-
-            if ( postsError ) {
-                Alert.alert("Falha", "Posts não Encontrados, Tente Novamente!");
-                router.replace("/(home)/home")
-                return;
-            } else if (postsData.length == 0) {
+            if (errorValidLike) {
+                Alert.alert("Falha", "Não Foi Possível Validar este Post!");
                 return;
             } else {
-                const likedPostIds = new Set(userLikes?.map(l => l.id_post));
-                const result: Post[] = postsData?.map(post => ({
-                    ...post,
-                    id_user_post: Array.isArray(post.id_user_post) 
-                        ? post.id_user_post[0] 
-                        : post.id_user_post,
-                    liked_by_user: likedPostIds.has(post.id_post),
-                })) ?? [];
-
-                setPosts(result);
-                setPostFound(true);
-                getCountPostFromCurrentuser(idCurrentUserAuth);
+                if (likeIsTrue) {
+                    removeLikePost(idPost);
+                } else {
+                    likePost(idPost);
+                }
             }
-
         } catch (error) {
-            Alert.alert("Falha", "Tivemos Um Problema, Tente Novamente!");
+            Alert.alert("Falha", "Não Post Inválido")
             return;
         }
-    }    
+    };
 
-    useEffect(() => {
-        getCurrentUser();
-    }, []);
+    const startProfilePage = () => { 
+        fetchNameUser();
+        fetchPostsCurrentUser();
+        getCountPostFromCurrentuserePost();
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            startProfilePage();
+        }, [])
+    );
 
     return (
         <View style={styles.container}>
@@ -225,7 +102,7 @@ export default function Profile() {
                 />
     
                 <View style={styles.profileInfo}>
-                    <Text style={styles.userText}>{userName}</Text>
+                    <Text style={styles.userText}>{userNameCurrent}</Text>
                     <Text style={styles.textPost}>Posts: {postsQuantity}</Text>
                     <TouchableOpacity style={styles.btnProfileEdit}>
                         <Text style={styles.btnProfileEditText}>Editar Perfil</Text>
@@ -238,11 +115,11 @@ export default function Profile() {
             <View style={styles.separatorLine} />
     
             <View style={styles.containerPost}>
-                {postFound ? (
+                {posts ? (
 
                     <FlatList
                         refreshing={reloadPage}
-                        onRefresh={() => featchPosts(idCurrentUser)}
+                        onRefresh={() => fetchPostsCurrentUser()}
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.listContent}
                         data={posts}
@@ -269,7 +146,7 @@ export default function Profile() {
                                 <View style={styles.headerEndPost}>
                                     <TouchableOpacity
                                         style={styles.btnLike}
-                                        onPress={() => addLikeOrRemoveLike(item.id_post, idCurrentUser)}
+                                        onPress={() => addLikeOrRemoveLike(item.id_post)}
                                     >
                                         {
                                             item.liked_by_user ? (

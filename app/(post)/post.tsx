@@ -1,58 +1,35 @@
 import colors from "@/constants/colors";
-import { supabase } from "@/lib/supabase";
+import { viewModelCreatePost } from "@/src/viewModels/viewModelPost";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
 
 export default function Post() {
 
+    const { createNewPost, loading, error } = viewModelCreatePost();
     const [ textPost, setTextPost ] = useState("");
-    const [ loading, setLoading ] = useState(false);
 
     async function backToHome() { router.replace("/(home)/home") };
     
-    async function sendPost() {
-        try {
-
-            setLoading(true);
-
-            //const { data: authData, error: authError } = await supabase.auth.getUser();
-
-            if (!textPost || textPost.trim().length === 0) {
-                Alert.alert("Atenção", "Insira o Texto");
-                return;
-            }
-
-            const { data: authData, error: authError } = await supabase.auth.getUser();
-
-            if (authError || !authData.user) {
-                backToHome();
-                return;
-            };
-
-            const { error } = await supabase.from('posts')
-                                            .insert({
-                                                id_user_post: authData.user.id,
-                                                text_post: textPost
-                                            });
-
-            if (error) {
-                Alert.alert("Falha", "Não Foi Possível Realizar a Postagem, Tente Novamente!");
-                return;
-            } else {
-                Alert.alert("Sucesso", "Post Realizado!!!");
-                backToHome();
-            }
-
-        } catch (error) {
-            Alert.alert("Erro", "Tivemos um Problema Interno, Tente Realizar a Postagem Novamente!");
+    const createPost = () => {
+        
+        if (!textPost || textPost.trim().length === 0) {
+            Alert.alert("Atenção", "Insira o Texto");
             return;
-        } finally {
-            setLoading(false)
         }
 
+        createNewPost(textPost);
+        setTextPost("")
+        Alert.alert("Sucesso", "Post Criado!")
+
     }
+
+    useEffect(() => {
+        if (error) {
+            Alert.alert("Falha", "Não Foi Possivel Criar o Post, Tente Novamente");
+        } 
+    }, [error]);
 
     return (
         <View style={styles.container}>
@@ -96,7 +73,7 @@ export default function Post() {
     
             <TouchableOpacity
                 style={styles.btnPost}
-                onPress={() => { sendPost() }}
+                onPress={() => { createPost() }}
             >
                 <Text style={styles.btnPostText}>
                     {loading ? "Postando..." : "Postar"}
