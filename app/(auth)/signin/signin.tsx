@@ -1,3 +1,5 @@
+
+import CustomButton from "@/components/buttons/ButtonComponent";
 import { viewModelSignIn } from "@/src/viewModels/viewModelAuth";
 import { useEffect, useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -63,12 +65,15 @@ export default function SignIn() {
                     style={styles.textInputField}
                 />
                 
-                <TouchableOpacity 
-                    style={styles.btnLogin}
-                    onPress={signInApp}
-                >
-                    <Text style={{ fontWeight: "bold", fontSize: 22 }}>{loading ? "Carregando..." : "Entrar"}</Text>
-                </TouchableOpacity>
+                <CustomButton
+                    onPress={() => {signInApp()}}
+                    width={"80%"}
+                    height={"9.5%"}
+                    marginTop={"10%"}
+                    loading={loading}
+                    loadingTextTrue={"Carregando..."}
+                    loadingTextFalse={"Entrar"}
+                />
 
                 <View style={[ styles.separatorLine, { marginTop: "10%" } ]}/>
 

@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "jest --watchAll"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -22,7 +23,7 @@
     "expo-status-bar": "55.0.5-canary-20260327-0789fbc",
     "expo-symbols": "55.0.6-canary-20260327-0789fbc",
     "expo-web-browser": "55.0.11-canary-20260327-0789fbc",
-    "react": "19.2.0",
+    "react": "^19.2.4",
     "react-dom": "19.2.0",
     "react-native": "0.83.4",
     "react-native-feather": "^1.1.2",
@@ -31,10 +32,21 @@
     "react-native-screens": "~4.23.0",
     "react-native-svg": "^15.15.4",
     "react-native-url-polyfill": "^3.0.0",
-    "react-native-web": "~0.21.0"
+    "react-native-web": "~0.21.0",
+    "react-test-renderer": "^19.2.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-react": "^7.28.5",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.2.2",
+    "babel-jest": "^30.3.0",
+    "jest": "^30.3.0",
+    "jest-expo": "55.0.12-canary-20260327-0789fbc",
+    "metro-react-native-babel-preset": "^0.77.0",
+    "ts-jest": "^29.4.6",
     "typescript": "~5.9.2"
   },
   "private": true
