@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase } from "../../lib/supabase";
 import { PostReadParam } from "../types/postReadType";
 import { PostParam } from "../types/postType";
 
@@ -31,7 +31,6 @@ export const fetchAllPosts = async ( idCurrentAuthUser: string ) => {
                 `)
                 .order('datetime_create', { ascending: false }),
         supabase.from('likes')
-                .select('id_post')
                 .select('id_post')
                 .eq('id_user_like', idCurrentAuthUser),
     ]);

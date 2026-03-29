@@ -1,8 +1,8 @@
 
-import CustomButton from "@/components/buttons/ButtonComponent";
 import { viewModelSignIn } from "@/src/viewModels/viewModelAuth";
 import { useEffect, useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
+import CustomButton from "../../../components/buttons/buttonComponent";
 import styles from "./style";
 
 
@@ -38,7 +38,7 @@ export default function SignIn() {
                 <Text style={ styles.titlePage }>SS Media</Text>
             </View>
 
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <View style={ styles.inputContainer }>
                 
                 <Text style={[ styles.textIdentity, {  fontSize: 30, marginTop: "-8%", marginStart: "-65%" }]}>Login</Text>
                 

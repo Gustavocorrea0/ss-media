@@ -43,7 +43,7 @@ describe("signIn test", () => {
         await expect(
             signInApp({
                 email: 'teste@email.com',
-                password: 'senhaErrada',
+                password: 'senhaInvalida',
             })
         ).rejects.toThrow('Invalid credentials');
     });
