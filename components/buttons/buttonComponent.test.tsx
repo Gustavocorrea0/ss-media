@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native';
-import CustomButton from "./ButtonComponent";
+import CustomButton from "./buttonComponent";
 
 describe("group testing of the custom button", () => {
 

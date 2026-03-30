@@ -2,7 +2,7 @@
 
 ## 📌 Descrição do Projeto
 
-Este projeto consiste em uma rede social simple desenvolvida com **React Native utilizando Expo**, integrado ao **Supabase** como backend. A aplicação foi construída com objetivo de seguir boas práticas de desenvolvimento, com foco em organização, escalabilidade e facil manutenção do código.
+Este projeto consiste em uma rede social simple desenvolvida com **React Native utilizando Expo**, integrado ao **Supabase** como backend. A aplicação foi construída com objetivo de seguir boas práticas de desenvolvimento, com foco em organização, escalabilidade e facil manutenção de código.
 
 ---
 
@@ -80,9 +80,9 @@ Foi implementado o padrão **Mediator** para:
 
 ## 🎥 Vídeo Explicativo
 
-Confira um vídeo demonstrando o funcionamento do projeto:
 
-📼 
+
+📼 [Clique Aqui para Conferir o vídeo demonstrando o funcionamento e o Desenvolvimento do projeto](https://youtu.be/r6GHDWliB7k)
 
 ---
 

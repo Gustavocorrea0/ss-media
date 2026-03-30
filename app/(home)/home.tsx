@@ -31,7 +31,7 @@ export default function Home() {
     async function addLikeOrRemoveLike(idPost: string) {
         try {
             const likeIsTrue = await validLike(idPost);
-            if (errorValidLike) {
+            if (errorValidLike) { 
                 Alert.alert("Falha", "Não Foi Possível Validar este Post!");
                 return;
             } else {
